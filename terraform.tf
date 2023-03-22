@@ -13,8 +13,17 @@ terraform {
       source  = "hashicorp/tls"
     }
   }
+  cloud {
+    organization = "richard-russell-org"
+    workspaces {
+      name = "aws_dynamic_creds"
+    }
+  }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
+  default_tags {
+    tags = var.aws_default_tags
+  }
 }
