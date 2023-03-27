@@ -7,8 +7,34 @@ This repository has been created as of March 2023, no promise is given to keep t
 - You will need access to a TFC organization.
 - You will need access to an AWS Account where you have sufficient permissions to create an OIDC provider.
 - You will need to run this module in a workspace with AWS authorization already configured
+- Add one or more permissions policies to the role created by this config. To do this using Terrafor, add a file, e.g. `policies.tf` with one or more policies as follows:
+
+```
+resource "aws_iam_policy" "IAMExamplePolicy" {
+  name        = "tfc-IAMExamplePolicy"
+  description = "TFC run policy - IAMExamplePolicy"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            # Your permissions policy here
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "tfc_IAMExamplePolicy" {
+  role       = aws_iam_role.tfc_role.name
+  policy_arn = aws_iam_policy.IAMExamplePolicy.arn
+}
+```
 
 ## Running
+
+To enable dynamic credentials in an existing workspace, tag the workspace with `aws_dyn_creds`.
 
 After providing the necessary variables, running a terraform apply of this module should provide you with a variable set where the following environment variables are set
 
@@ -16,7 +42,7 @@ After providing the necessary variables, running a terraform apply of this modul
 - TFC_AWS_RUN_ROLE_ARN
 - TFC_AWS_WORKLOAD_IDENTITY_AUDIENCE
 
-This variable set will be shared with all workspaces that are tagged with `aws_dyn_creds`.
+This variable set will be shared with all workspaces with the `aws_dyn_creds` tag.
 
 If any of these are missing, something has gone wrong with the module.
 
@@ -24,7 +50,7 @@ You should now be set up to run through the rest of the [Dynamic Provider Creden
 
 ## After Apply
 
-Head to the newly created workspace and copy the cloud stanza into a terraform configuration and you can leverage the AWS role to create & destroy infrastructure with a CLI based workspace.
+Head to the workspace and copy the cloud stanza into a terraform configuration and you can leverage the AWS role to create & destroy infrastructure with a CLI based workspace.
 
 The AWS role created via this module will have no permissions. You can manually add permissions to it via the Amazon UI, or you can amend this module to include a policy document or in line policy code such as [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy)
 
