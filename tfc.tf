@@ -7,6 +7,12 @@ data "tfe_workspace_ids" "dynamic_cred_ws" {
   organization = data.tfe_organization.organization.name
 }
 
+resource "tfe_workspace_variable_set" "share_dc_vars" {
+  for_each = data.tfe_workspace_ids.dynamic_cred_ws.ids
+  variable_set_id = tfe_variable_set.dynamic_creds.id
+  workspace_id    = each.value
+}
+
 # resource "tfe_workspace" "workspace" {
 #   name         = var.workspace_name
 #   organization = data.tfe_organization.organization.name
@@ -46,8 +52,3 @@ resource "tfe_variable" "tfc_aws_run_role_arn" {
   sensitive       = false
 }
 
-resource "tfe_workspace_variable_set" "share_dc_vars" {
-  for_each = data.tfe_workspace_ids.dynamic_cred_ws.ids
-  variable_set_id = tfe_variable_set.dynamic_creds.id
-  workspace_id    = each.value
-}
