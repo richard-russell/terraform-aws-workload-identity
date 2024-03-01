@@ -7,7 +7,7 @@ This repository has been created as of March 2023, no promise is given to keep t
 - You will need access to a TFC organization.
 - You will need access to an AWS Account where you have sufficient permissions to create an OIDC provider.
 - You will need to run this module in a workspace with AWS authorization already configured
-- Add one or more permissions policies to the role created by this config. To do this using Terrafor, add a file, e.g. `policies.tf` with one or more policies as follows:
+- Add one or more permissions policies to the role created by this config. To do this using Terraform, add a file, e.g. `policies.tf` with one or more policies as follows:
 
 ```
 resource "aws_iam_policy" "IAMExamplePolicy" {

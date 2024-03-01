@@ -34,8 +34,8 @@ data "aws_iam_policy_document" "tfc_role_trust_policy" {
       test     = "StringLike"
       variable = "${var.host_name}:sub"
       values = [
-        "organization:${data.tfe_organization.organization.name}:project:*:workspace:*:run_phase:plan",
-        "organization:${data.tfe_organization.organization.name}:project:*:workspace:*:run_phase:apply",
+        "organization:${data.tfe_organization.organization.name}:project:*:workspace:*:run_phase:*",
+        "organization:${data.tfe_organization.organization.id}:project:*:stack:*:deployment:*:operation:*",
       ]
     }
   }
@@ -46,4 +46,10 @@ resource "aws_iam_role" "tfc_role" {
   assume_role_policy = data.aws_iam_policy_document.tfc_role_trust_policy.json
 }
 
+output "audience" {
+  value = local.workload_identity_audience
+}
 
+output "role_arn" {
+  value = aws_iam_role.tfc_role.arn
+}

@@ -13,12 +13,6 @@ resource "tfe_workspace_variable_set" "share_dc_vars" {
   workspace_id    = each.value
 }
 
-# resource "tfe_workspace" "workspace" {
-#   name         = var.workspace_name
-#   organization = data.tfe_organization.organization.name
-#   project_id = var.project_id
-# }
-
 resource "tfe_variable_set" "dynamic_creds" {
   name         = "aws_dynamic_cred_settings"
   description  = "Workspace vars needed for dynamic credentials"
